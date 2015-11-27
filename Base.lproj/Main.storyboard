@@ -147,10 +147,10 @@
             </objects>
             <point key="canvasLocation" x="-98" y="495"/>
         </scene>
-        <!--Root View Controller-->
+        <!--Users-->
         <scene sceneID="L7z-fr-thc">
             <objects>
-                <tableViewController id="7E1-aM-sM6" customClass="UserTableViewController" customModule="HangingOut" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController title="Users" id="7E1-aM-sM6" customClass="UserTableViewController" customModule="HangingOut" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" id="wUd-3I-9Ga">
                         <rect key="frame" x="0.0" y="64" width="320" height="504"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -171,12 +171,83 @@
                         </connections>
                     </tableView>
                     <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
-                    <navigationItem key="navigationItem" title="Root View Controller" id="B31-nK-BY5"/>
+                    <navigationItem key="navigationItem" title="Users" id="B31-nK-BY5">
+                        <barButtonItem key="leftBarButtonItem" title="Item" id="enO-E9-80q"/>
+                        <barButtonItem key="rightBarButtonItem" title="Post" id="IRX-y5-CEA">
+                            <connections>
+                                <segue destination="d7B-cc-d7N" kind="show" id="UDv-9U-lWu"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="I77-bB-d8C" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="648" y="495"/>
+        </scene>
+        <!--Post-->
+        <scene sceneID="qbm-De-sR3">
+            <objects>
+                <viewController title="Post" id="d7B-cc-d7N" customClass="PostViewController" customModule="HangingOut" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="bar-kS-euU"/>
+                        <viewControllerLayoutGuide type="bottom" id="KO6-PH-tkE"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="In8-g2-Ykl">
+                        <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Eys-6b-P4p">
+                                <rect key="frame" x="101" y="322" width="119" height="30"/>
+                                <state key="normal" title="Choose an image"/>
+                                <connections>
+                                    <action selector="chooseImageButton:" destination="d7B-cc-d7N" eventType="touchUpInside" id="8q0-ke-4Eu"/>
+                                </connections>
+                            </button>
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Qlh-V2-Bd6">
+                                <rect key="frame" x="106" y="458" width="108" height="30"/>
+                                <fontDescription key="fontDescription" type="boldSystem" pointSize="15"/>
+                                <state key="normal" title="Post Image"/>
+                                <connections>
+                                    <action selector="postImageButton:" destination="d7B-cc-d7N" eventType="touchUpInside" id="q3y-TJ-ulH"/>
+                                </connections>
+                            </button>
+                            <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Share something..." textAlignment="natural" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="Krj-Sr-SDs">
+                                <rect key="frame" x="55" y="391" width="211" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="14"/>
+                                <textInputTraits key="textInputTraits"/>
+                            </textField>
+                            <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" misplaced="YES" image="person-placeholder.jpg" translatesAutoresizingMaskIntoConstraints="NO" id="eSt-Xc-YaX">
+                                <rect key="frame" x="60" y="72" width="200" height="177"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="169" id="S5W-cU-TYw"/>
+                                    <constraint firstAttribute="width" constant="211" id="iF3-e5-ljG"/>
+                                </constraints>
+                            </imageView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="eSt-Xc-YaX" firstAttribute="top" secondItem="bar-kS-euU" secondAttribute="bottom" constant="8" id="1Ja-FF-cQz"/>
+                            <constraint firstItem="Qlh-V2-Bd6" firstAttribute="centerX" secondItem="In8-g2-Ykl" secondAttribute="centerX" id="8cc-Qq-pWx"/>
+                            <constraint firstItem="eSt-Xc-YaX" firstAttribute="centerX" secondItem="In8-g2-Ykl" secondAttribute="centerX" id="B01-JM-R59"/>
+                            <constraint firstItem="Eys-6b-P4p" firstAttribute="top" secondItem="eSt-Xc-YaX" secondAttribute="bottom" constant="42" id="Crb-Ib-ww1"/>
+                            <constraint firstItem="Qlh-V2-Bd6" firstAttribute="top" secondItem="Krj-Sr-SDs" secondAttribute="bottom" constant="37" id="Mgx-Ob-cgt"/>
+                            <constraint firstItem="Qlh-V2-Bd6" firstAttribute="top" secondItem="Krj-Sr-SDs" secondAttribute="bottom" constant="37" id="ODB-b1-4IL"/>
+                            <constraint firstItem="Krj-Sr-SDs" firstAttribute="top" secondItem="Eys-6b-P4p" secondAttribute="bottom" constant="39" id="QXX-bx-Ayc"/>
+                            <constraint firstItem="Eys-6b-P4p" firstAttribute="centerX" secondItem="In8-g2-Ykl" secondAttribute="centerX" id="TCj-QS-ij1"/>
+                            <constraint firstItem="Krj-Sr-SDs" firstAttribute="top" secondItem="Eys-6b-P4p" secondAttribute="bottom" constant="39" id="WF6-uC-1I0"/>
+                            <constraint firstItem="Krj-Sr-SDs" firstAttribute="centerX" secondItem="In8-g2-Ykl" secondAttribute="centerX" id="bHz-a9-mUt"/>
+                        </constraints>
+                    </view>
+                    <simulatedScreenMetrics key="simulatedDestinationMetrics" type="retina4"/>
+                    <connections>
+                        <outlet property="imageView1" destination="eSt-Xc-YaX" id="GnX-b9-U4H"/>
+                        <outlet property="textField1" destination="Krj-Sr-SDs" id="FBi-US-ddT"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="IeV-Aq-ucd" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1044" y="495"/>
         </scene>
         <!--NC-->
         <scene sceneID="4tB-pV-BrY">
@@ -186,6 +257,7 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" id="Pfz-LI-1If">
                         <rect key="frame" x="0.0" y="0.0" width="320" height="44"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <color key="backgroundColor" red="0.0" green="0.0" blue="0.50196081400000003" alpha="1" colorSpace="calibratedRGB"/>
                     </navigationBar>
                     <connections>
                         <segue destination="7E1-aM-sM6" kind="relationship" relationship="rootViewController" id="Twj-HL-XoF"/>
@@ -196,4 +268,8 @@
             <point key="canvasLocation" x="274" y="495"/>
         </scene>
     </scenes>
+    <resources>
+        <image name="person-placeholder.jpg" width="500" height="500"/>
+    </resources>
+    <color key="tintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
 </document>
