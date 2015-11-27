@@ -24,13 +24,14 @@ class LoginViewController: UIViewController, UITableViewDelegate {
         super.viewDidLoad()
         // Do any additional setup after loading the view, typically from a nib.
         
+        //PFUser.logOut()
         //signUpParse()
         
         //getParseData()
         
         //updateParseData()
         
-        print("Current User= \(PFUser.currentUser()!.username)")
+        //print("Current User= \(PFUser.currentUser()!.username)")
         
     }
 
@@ -38,6 +39,7 @@ class LoginViewController: UIViewController, UITableViewDelegate {
     override func viewDidAppear(animated: Bool) {
         //Executed after DidLoad
         if PFUser.currentUser() != nil {
+            print("Current User= \(PFUser.currentUser()!.username)")
             self.performSegueWithIdentifier("segue_NC", sender: self)
         }
     }
@@ -132,6 +134,7 @@ class LoginViewController: UIViewController, UITableViewDelegate {
             if error == nil {
                 // Do stuff after successful login.
                 print("logged In")
+                self.performSegueWithIdentifier("segue_NC", sender: self)
             } else {
                 // The login failed. Check error to see why.
                 let errorString = error!.userInfo["error"] as! NSString

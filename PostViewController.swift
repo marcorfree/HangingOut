@@ -50,6 +50,10 @@ class PostViewController: UIViewController, UINavigationControllerDelegate, UIIm
     }
     
     
+    @IBAction func logOutButton(sender: UIBarButtonItem) {
+        PFUser.logOut()
+        self.performSegueWithIdentifier("segue_logOut", sender: self)
+    }
     
 
     
