@@ -44,6 +44,17 @@ class LoginViewController: UIViewController, UITableViewDelegate {
         }
     }
     
+    override func viewWillAppear(animated: Bool) {
+        //Hide the navigation bar when it's displayed from logout
+        self.navigationController?.navigationBarHidden = true
+    }
+    
+    override func viewWillDisappear(animated: Bool) {
+        //Show again the navigation bar
+        self.navigationController?.navigationBarHidden = false
+    }
+    
+    
     override func didReceiveMemoryWarning() {
         super.didReceiveMemoryWarning()
         // Dispose of any resources that can be recreated.
@@ -111,6 +122,8 @@ class LoginViewController: UIViewController, UITableViewDelegate {
             if error == nil {
                 // Hooray! Let them use the app now.
                 print("Signed Up!")
+                self.performSegueWithIdentifier("segue_NC", sender: self)
+
             } else {
                 // Examine the error object and inform the user.
                 let errorString = error!.userInfo["error"] as! NSString
