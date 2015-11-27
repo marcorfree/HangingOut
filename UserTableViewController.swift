@@ -15,6 +15,8 @@ class UserTableViewController: UITableViewController {
     
     var followings = [String]()
     
+    //var refreshControl = UIrefreshControlControl()
+    //var refreshControl : UIrefreshControlControl!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,7 +29,24 @@ class UserTableViewController: UITableViewController {
         
         getUsers()
         
-        getFollowings()
+        //self.automaticallyAdjustsScrollViewInsets = false
+        //Manage refreshControl
+        self.refreshControl = UIRefreshControl()
+        //msg that appears when Pull To refreshControl pop-ups
+        self.refreshControl?.attributedTitle = NSAttributedString(string: "Pull to refreshControl")
+        // you can use "refreshControl:" in case
+        self.refreshControl?.addTarget(self, action: "refresh", forControlEvents: UIControlEvents.ValueChanged)
+        //self.tableView.addSubview(refreshControl!)
+    }
+
+    
+    func refresh() {
+        PFQuery.clearAllCachedResults()
+        print("Refreshed")
+        getUsers()
+        //print("OUT \(self.refreshControl?.refreshing)")
+        self.refreshControl?.endRefreshing()
+        
         
     }
     
@@ -53,60 +72,66 @@ class UserTableViewController: UITableViewController {
 
     
     func getUsers(){
+        
         let query = PFUser.query()!
         //let query = PFQuery(className: "_User")
-        query.findObjectsInBackgroundWithBlock {
-            (objects: [PFObject]?, error: NSError?)  -> Void in
+        query.findObjectsInBackgroundWithBlock { (objects: [PFObject]?, error: NSError?)  -> Void in
             
             if error == nil {
                 // The find succeeded.
+                self.users.removeAll(keepCapacity: true)
                 //print("Successfully retrieved \(objects!.count) items.")
                 // Do something with the found objects
-
-                      for object in objects! {
-                        let user:PFUser = object as! PFUser
-                        if user.username != PFUser.currentUser()?.username {
-                          self.users.append(user.username!)
-                        }
-                        
+                
+                for object in objects! {
+                    let user:PFUser = object as! PFUser
+                    if user.username != PFUser.currentUser()!.username {
+                        self.users.append(user.username!)
+                    }
                 }
-            self.tableView.reloadData()
-            }
+                
+                
+                
+                
+                let query = PFQuery(className:"Followers")
+                query.whereKey("follower", equalTo:PFUser.currentUser()!.username!)
+                query.findObjectsInBackgroundWithBlock { (objects: [PFObject]?, error: NSError?) -> Void in
+                    if error == nil {
+                        // The find succeeded.
+                        self.followings.removeAll(keepCapacity: true)
+                        //print("Successfully retrieved \(objects!.count) followings.")
+                        // Do something with the found objects
+                        for object in objects! {
+                            let s: String = object.objectForKey("following") as! String
+                            self.followings.append(s)
+                        } //end for
+                    } //end if
+                    //print("followings out=\(self.followings)")
+                    self.tableView.reloadData()
+                    /*print("IN \(self.refreshControl.refreshControling)")
+                    self.refreshControl.endrefreshControling()*/
+                } //end closure
+                
+            } //end if
             else {
                 // Log details of the failure
                 print("Error: \(error!) \(error!.userInfo)")
-            }
-        }
-    }
+            } //end else
+        } //end closure
+    } //end function
     
-    func getFollowings() {
-        let query = PFQuery(className:"Followers")
-        query.whereKey("follower", equalTo:PFUser.currentUser()!.username!)
-        query.findObjectsInBackgroundWithBlock {
-            (objects: [PFObject]?, error: NSError?) -> Void in
-            if error == nil {
-                // The find succeeded.
-                //print("Successfully retrieved \(objects!.count) followings.")
-                // Do something with the found objects
-                for object in objects! {
-                    let s: String = object.objectForKey("following") as! String
-                    //print(s)
-                    self.followings.append(s)
-                    //print("followings int=\(self.followings)")
-                }
-            }
-        }
-        
-    }
     
     
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+        /*print(indexPath.row)
+        print("users out=\(self.users)")
+        print("followings out=\(self.followings)")*/
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
-        
         // Configure the cell...
         cell.textLabel!.text = users[indexPath.row]
-        //Mark the followings
+        //Mark/Unmark the followings
         if followings.contains(users[indexPath.row]) { cell.accessoryType = UITableViewCellAccessoryType.Checkmark }
+        else { cell.accessoryType = UITableViewCellAccessoryType.None }
         return cell
     }
     
