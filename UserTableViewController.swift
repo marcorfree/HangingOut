@@ -102,8 +102,7 @@ class UserTableViewController: UITableViewController {
                         //print("Successfully retrieved \(objects!.count) followings.")
                         // Do something with the found objects
                         for object in objects! {
-                            let s: String = object.objectForKey("following") as! String
-                            self.followings.append(s)
+                            self.followings.append(object["following"] as! String)
                         } //end for
                     } //end if
                     //print("followings out=\(self.followings)")

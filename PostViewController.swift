@@ -93,7 +93,7 @@ class PostViewController: UIViewController, UINavigationControllerDelegate, UIIm
             //Take the image currently stored in ImageView1
             //let imageData = UIImagePNGRepresentation(self.imageView1.image!)
             //imageData compressed
-            let imageData = self.imageView1.image!.mediumQualityJPEGNSData
+            let imageData = self.imageView1.image!.lowestQualityJPEGNSData
             //Get bytes size of image
             var imageSize = Float(imageData.length)
             //Transform into Megabytes
