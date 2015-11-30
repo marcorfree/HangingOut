@@ -10,8 +10,9 @@ import UIKit
 
 
 //Manage each cell
-class FeedsTableViewCell: UITableViewCell {
+class FeedsViewCell: UITableViewCell {
 
+    
     @IBOutlet var imageView1: UIImageView!
     
     @IBOutlet var usernameLabel: UILabel!

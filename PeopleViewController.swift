@@ -1,5 +1,5 @@
 //
-//  UserTableViewController.swift
+//  PeopleViewController.swift
 //  HangingOut
 //
 //  Created by Marco Rago on 26/11/15.
@@ -9,13 +9,19 @@
 import UIKit
 import Parse
 
-class UserTableViewController: UITableViewController {
+class PeopleViewController: UIViewController, UITableViewDelegate, UITableViewDataSource {
 
     var users = [String]()
     
     var followings = [String]()
     
-    //var refreshControl = UIrefreshControlControl()
+    @IBOutlet var tableView1: UITableView!
+    
+    
+    
+    var refreshControl = UIRefreshControl()
+    
+
     //var refreshControl : UIrefreshControlControl!
     
     override func viewDidLoad() {
@@ -29,25 +35,26 @@ class UserTableViewController: UITableViewController {
         
         getUsers()
         
-        //self.automaticallyAdjustsScrollViewInsets = false
         //Manage refreshControl
-        self.refreshControl = UIRefreshControl()
+        //self.refreshControl = UIRefreshControl()
         //msg that appears when Pull To refreshControl pop-ups
-        self.refreshControl?.attributedTitle = NSAttributedString(string: "Pull to refreshControl")
+        self.refreshControl.attributedTitle = NSAttributedString(string: "Pull to refreshControl")
         // you can use "refreshControl:" in case
-        self.refreshControl?.addTarget(self, action: "refresh", forControlEvents: UIControlEvents.ValueChanged)
-        //self.tableView.addSubview(refreshControl!)
+        self.refreshControl.addTarget(self, action: "refresh", forControlEvents: UIControlEvents.ValueChanged)
+        self.tableView1.addSubview(refreshControl)
+        /*
+        //If navigation Controller is used
+        self.tableView.contentInset = UIEdgeInsetsZero;
+        */
     }
 
     
     func refresh() {
         PFQuery.clearAllCachedResults()
-        print("Refreshed")
+        //print("Refreshed")
         getUsers()
         //print("OUT \(self.refreshControl?.refreshing)")
-        self.refreshControl?.endRefreshing()
-        
-        
+        self.refreshControl.endRefreshing()
     }
     
   
@@ -60,12 +67,12 @@ class UserTableViewController: UITableViewController {
 
     // MARK: - Table view data source
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
         // #warning Incomplete implementation, return the number of sections
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // #warning Incomplete implementation, return the number of rows
         return users.count
     }
@@ -106,7 +113,8 @@ class UserTableViewController: UITableViewController {
                         } //end for
                     } //end if
                     //print("followings out=\(self.followings)")
-                    self.tableView.reloadData()
+
+                        self.tableView1!.reloadData()
                     /*print("IN \(self.refreshControl.refreshControling)")
                     self.refreshControl.endrefreshControling()*/
                 } //end closure
@@ -121,7 +129,7 @@ class UserTableViewController: UITableViewController {
     
     
     
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
+    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         /*print(indexPath.row)
         print("users out=\(self.users)")
         print("followings out=\(self.followings)")*/
@@ -135,7 +143,7 @@ class UserTableViewController: UITableViewController {
     }
     
 
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let selectedRow:UITableViewCell = tableView.cellForRowAtIndexPath(indexPath)!
         
         if selectedRow.accessoryType == UITableViewCellAccessoryType.Checkmark {

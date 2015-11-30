@@ -50,7 +50,7 @@ class PostViewController: UIViewController, UINavigationControllerDelegate, UIIm
     }
     
     
-    @IBAction func logOutButton(sender: UIBarButtonItem) {
+    @IBAction func logOutButton(sender: AnyObject) {
         PFUser.logOut()
         self.performSegueWithIdentifier("segue_logOut", sender: self)
     }
@@ -114,6 +114,7 @@ class PostViewController: UIViewController, UINavigationControllerDelegate, UIIm
                 //Check the size
                 post["imageFile"] = imageFile
                 pause()
+
                 post.saveInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
                     if (success) {
                         // The object has been saved.
@@ -126,8 +127,8 @@ class PostViewController: UIViewController, UINavigationControllerDelegate, UIIm
                         // There was a problem, check error.description
                         self.showAlert("Could not post", error: error!.description)
                     }
-                    self.restore()
                 }
+                self.restore()
             }
         }
     }

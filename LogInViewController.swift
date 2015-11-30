@@ -8,8 +8,9 @@
 
 import UIKit
 import Parse
+import ParseFacebookUtilsV4
 
-class LoginViewController: UIViewController, UITableViewDelegate {
+class LoginViewController: UIViewController {
 
     
     var activityIndicator: UIActivityIndicatorView = UIActivityIndicatorView()
@@ -18,6 +19,11 @@ class LoginViewController: UIViewController, UITableViewDelegate {
     @IBOutlet var username: UITextField!
 
     @IBOutlet var password: UITextField!
+    
+    
+    @IBOutlet var logInButton: UIButton!
+    
+    @IBOutlet var signUpButton: UIButton!
     
     
     override func viewDidLoad() {
@@ -31,7 +37,17 @@ class LoginViewController: UIViewController, UITableViewDelegate {
         
         //updateParseData()
         
-        //print("Current User= \(PFUser.currentUser()!.username)")
+        self.logInButton.layer.cornerRadius = 5
+        
+        self.signUpButton.layer.cornerRadius = 5
+        
+        //self.view.backgroundColor = UIColor(patternImage: UIImage(named: "images.jpeg")!)
+        
+        self.navigationItem.title="Log In"
+
+        print("Current User= \(PFUser.currentUser()?.username)")
+        
+        
         
     }
 
@@ -39,8 +55,8 @@ class LoginViewController: UIViewController, UITableViewDelegate {
     override func viewDidAppear(animated: Bool) {
         //Executed after DidLoad
         if PFUser.currentUser() != nil {
-            print("Current User= \(PFUser.currentUser()!.username)")
-            self.performSegueWithIdentifier("segue_NC", sender: self)
+            //print("Current User= \(PFUser.currentUser()!.username)")
+            self.performSegueWithIdentifier("segue_TBC", sender: self)
         }
     }
     
@@ -83,6 +99,23 @@ class LoginViewController: UIViewController, UITableViewDelegate {
     }
     
     
+    @IBAction func facebookLogInButton(sender: UIButton) {
+        let permissions = ["public_profile", "email", "user_friends"]
+        
+        PFFacebookUtils.logInInBackgroundWithReadPermissions(permissions) { (user: PFUser?, error: NSError?) -> Void in
+            if let user = user {
+                if user.isNew {
+                    print("User signed up and logged in through Facebook!")
+                    self.performSegueWithIdentifier("segue_TBC", sender: self)
+                } else {
+                    print("User logged in through Facebook!")
+                    self.performSegueWithIdentifier("segue_TBC", sender: self)
+                }
+            } else {
+                print("Uh oh. The user cancelled the Facebook login.")
+            }
+        }
+    }
     
     
     func pause(){
@@ -121,8 +154,8 @@ class LoginViewController: UIViewController, UITableViewDelegate {
             
             if error == nil {
                 // Hooray! Let them use the app now.
-                print("Signed Up!")
-                self.performSegueWithIdentifier("segue_NC", sender: self)
+                //print("Signed Up!")
+                self.performSegueWithIdentifier("segue_TBC", sender: self)
 
             } else {
                 // Examine the error object and inform the user.
@@ -139,15 +172,15 @@ class LoginViewController: UIViewController, UITableViewDelegate {
         //Here using the "_User" Parse Class
         
         
-        pause()
+        self.pause()
         
         PFUser.logInWithUsernameInBackground(username.text!, password:password.text!) {
             (user: PFUser?, error: NSError?) -> Void in
             self.restore()
             if error == nil {
                 // Do stuff after successful login.
-                print("logged In")
-                self.performSegueWithIdentifier("segue_NC", sender: self)
+                //print("logged In")
+                self.performSegueWithIdentifier("segue_TBC", sender: self)
             } else {
                 // The login failed. Check error to see why.
                 let errorString = error!.userInfo["error"] as! NSString
