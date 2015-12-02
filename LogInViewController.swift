@@ -100,12 +100,22 @@ class LoginViewController: UIViewController {
     
     
     @IBAction func facebookLogInButton(sender: UIButton) {
+        
         let permissions = ["public_profile", "email", "user_friends"]
         
         PFFacebookUtils.logInInBackgroundWithReadPermissions(permissions) { (user: PFUser?, error: NSError?) -> Void in
             if let user = user {
                 if user.isNew {
                     print("User signed up and logged in through Facebook!")
+                    
+                    /*
+                    PFUser.currentUser().username = result.name
+                    
+                    valueForKey("name")
+                    PFUser.currentUser().setValue(result.objectID, forKey: "fbId")
+                    PFUser.currentUser().saveEventually() // Always use saveEventually if you want to be sure that the save will succeed
+                    */
+                    self.saveFacebookData(user)
                     self.performSegueWithIdentifier("segue_TBC", sender: self)
                 } else {
                     print("User logged in through Facebook!")
@@ -113,6 +123,7 @@ class LoginViewController: UIViewController {
                 }
             } else {
                 print("Uh oh. The user cancelled the Facebook login.")
+                self.showAlert("Could not Log In", error: "The login via Facebook was unsuccessful, please try again!")
             }
         }
     }
@@ -134,11 +145,76 @@ class LoginViewController: UIViewController {
     }
     
     
+    func saveFacebookData(user: PFUser) {
+        print(user)
+        let accessToken = FBSDKAccessToken.currentAccessToken().tokenString
+        let session = NSURLSession.sharedSession()
+        let url = NSURL(string: "https://graph.facebook.com/me/picture?type=large&access_token="+accessToken)
+        let request = NSURLRequest(URL: url!)
+        let dataTask = session.dataTaskWithRequest(request) { (data:NSData?, response:NSURLResponse?, error:NSError?) -> Void in
+            if error != nil {
+                print( "*****   ERROR  *****")
+                print(error)
+                //self.showAlert("Could not retrieve your data", error: "The connection with Facebook was unsuccessful, please try again!")
+            } else {
+                
+                print("*******   *********")
+                
+                let imageFile = PFFile(name:"image.png", data: data!)
+                user["imageFile"] = imageFile
+                self.pause()
+                
+                user.saveInBackgroundWithBlock { (success: Bool, error: NSError?) -> Void in
+                    if (success) {
+                        // The object has been saved.
+                        print("OK")
+                    } else {
+                        // There was a problem, check error.description
+                        print(error)
+                    }
+                }
+                self.restore()
+                
+                
+                /*
+                user["image"] = data
+                user.saveEventually()
+                */
+            }
+            
+        }
+        dataTask.resume()
+
+        let graphRequest : FBSDKGraphRequest = FBSDKGraphRequest(graphPath: "me?fields=name,email", parameters: nil)
+        graphRequest.startWithCompletionHandler({ (connection, result, error) -> Void in
+            
+            if (error != nil)
+            {
+                // Process error
+                print("Process Error")
+                self.showAlert("Could not retrieve your data", error: "\(error)")
+            }
+            else
+            {
+                let userName : NSString = result.valueForKey("name") as! NSString
+                user["username"] =  userName as String
+                let email : NSString = result.valueForKey("email") as! NSString
+                user["email"] = email as String
+                user.saveEventually()
+                
+            }
+        })
+        
+       
+        
+    }
+    
+
     
     func signUpParse(){
         //Can also create and save custom Parse Object, using saveInBackgroundnWithBlock of a new PFObject
         //Here using the "_User" Parse Class
-        
+
         let user = PFUser()
         user.username = username.text
         user.password = password.text
@@ -187,8 +263,40 @@ class LoginViewController: UIViewController {
                 self.showAlert("Could not Log In", error: String(errorString))
             }
         }
+        
+        /*
+        if (FBSDKAccessToken.currentAccessToken() != nil)
+        {
+        
+            let accessToken: FBSDKAccessToken = FBSDKAccessToken.currentAccessToken() // Use existing access token.
+            
+            // Log In (create/update currentUser) with FBSDKAccessToken
+            PFFacebookUtils.logInInBackgroundWithAccessToken(accessToken, {
+                (user: PFUser?, error: NSError?) -> Void in
+                if user != nil {
+                    print("User logged in through Facebook!")
+                } else {
+                    print("Uh oh. There was an error logging in.")
+                }
+            })
+        
+        }
+        
+        //
+        // or
+        //
+        
+        // Link PFUser with FBSDKAccessToken
+        PFFacebookUtils.linkUserInBackground(user, withAccessToken: accessToken, {
+        (succeeded: Bool?, error: NSError?) -> Void in
+        if succeeded {
+        print("Woohoo, the user is linked with Facebook!")
+        }
+        })*/
+        
     }
 
+    
     func showAlert(title: String, error: String ){
         let alert = UIAlertController(title: title, message: error, preferredStyle: UIAlertControllerStyle.Alert)
         

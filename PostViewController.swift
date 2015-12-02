@@ -50,14 +50,6 @@ class PostViewController: UIViewController, UINavigationControllerDelegate, UIIm
     }
     
     
-    @IBAction func logOutButton(sender: AnyObject) {
-        PFUser.logOut()
-        self.performSegueWithIdentifier("segue_logOut", sender: self)
-    }
-    
-
-    
-    
     func imagePickerController(picker: UIImagePickerController, didFinishPickingImage image: UIImage, editingInfo: [String : AnyObject]?) {
         
         self.dismissViewControllerAnimated(true, completion: nil)
